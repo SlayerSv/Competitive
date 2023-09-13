@@ -2,22 +2,18 @@ function solve() {
   let ans;
   
 
-
-
-
   return ans;
 }
 
 function prepareData(data) {
-  data[0] = data[0].split(" ").map(Number);
-
-
+  data = [...data[0].split(" ").map(Number)];
+  
 
   return data;
 }
 
-let lineNumber = -1;
-let meta = 0;
+let lineNumber = 0;
+let meta = -2;
 let lastData = -2;
 let data = [];
 
