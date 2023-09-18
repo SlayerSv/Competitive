@@ -1,4 +1,8 @@
 class Dequeue {
+  dequeue;
+  head;
+  tail;
+  size;
 
   constructor(capacity = 20) {
     this.dequeue = new Array(capacity);

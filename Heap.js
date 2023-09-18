@@ -1,4 +1,6 @@
 class Heap {
+  heap;
+  needSwap;
 
   constructor(array = [], compareFunc = (a, b) => a < b) {
     this.heap = array;
@@ -17,11 +19,11 @@ class Heap {
         const tmp = this.heap[i]
         this.heap[i] = this.heap[childIndex];
         this.heap[childIndex] = tmp;
+        i = childIndex;
+        childIndex = i * 2 + 1;
       } else {
         break;
       }
-      i = childIndex;
-      childIndex = i * 2 + 1;
     }
   }
 
@@ -32,11 +34,11 @@ class Heap {
         const tmp = this.heap[parentIndex]
         this.heap[parentIndex] = this.heap[i];
         this.heap[i] = tmp;
+        i = parentIndex;
+        parentIndex = (i - 1) >> 1;
       } else {
         break;
       }
-      i = parentIndex;
-      parentIndex = (i - 1) >> 1;
     }
   }
 
@@ -57,7 +59,7 @@ class Heap {
     if (this.heap.length < 2) {
       return;
     }
-    for (let i = this.heap.length >> 1; i >= 0; i--) {
+    for (let i = (this.heap.length >> 1) - 1; i >= 0; i--) {
       this.down(i);
     }
   }

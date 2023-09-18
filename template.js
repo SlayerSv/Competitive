@@ -9,6 +9,7 @@ function prepareData(data) {
   data = [...data[0].split(" ").map(Number)];
   
 
+
   return data;
 }
 
