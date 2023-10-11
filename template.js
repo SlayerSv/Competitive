@@ -6,16 +6,15 @@ function solve() {
 }
 
 function prepareData(data) {
-  data = [...data[0].split(" ").map(Number)];
-  
+  data = data.map(line => line.split(" ").map(Number));
 
 
   return data;
 }
 
 let lineNumber = 0;
-let meta = -2;
-let lastData = -2;
+let meta = 0;
+let lastData = 1;
 let data = [];
 
 const readline = require("readline");
