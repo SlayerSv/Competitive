@@ -6,15 +6,20 @@ function solve() {
 }
 
 function prepareData(data) {
-  data = data.map(line => line.split(" ").map(Number));
+  data = data.map(line => {
+    line = line.split(" ").map(Number);
+    if (line.length === 1) return line[0];
+    return line;
+  });
 
 
   return data;
 }
 
 let lineNumber = 0;
-let meta = 0;
+const SKIP = [0];
 let lastData = 1;
+let meta = -2;
 let data = [];
 
 const readline = require("readline");
@@ -23,23 +28,18 @@ const rl = readline.createInterface({
 });
 
 rl.on("line", line => {
-  if (lineNumber === -1) {
+  if (SKIP.includes(lineNumber)) {
 
   } else if (lineNumber === meta) {
-      if (lastData < 0) {
-        meta = lineNumber + 2;
-      } else {
-        lastData = lineNumber + Number(line);
-        meta = lastData + 1;
-      }
-      
+      lastData = lineNumber + Number(line);
   } else {
     data.push(line);
-    if (lastData < 0 || lineNumber === lastData) {
+    if (lineNumber === lastData) {
       const preparedData = prepareData(data);
       const answer = solve(...preparedData);
       printAnswer(answer);
       data = [];
+      lineNumber = 0;
     }
   }
   lineNumber++;
