@@ -2,19 +2,10 @@ class SegmentTree {
   tree;
   updater;
   n = 0;
-  constructor(array, updater = (a, b) => a + b) {
+  constructor(array, updater = (a, b) => Math.max(a, b)) {
     this.updater = updater;
     this.n = 1 << this.getNextPowerOf2(array.length);
     this.build(array);
-  }
-
-  getNextPowerOf2(length) {
-    let n = 1;
-    let i = 0;
-    while (n << i < length) {
-      i++;
-    }
-    return i;
   }
 
   build(array) {
@@ -53,5 +44,14 @@ class SegmentTree {
       right = right >> 1;
     }
     return result;
+  }
+
+  getNextPowerOf2(length) {
+    let n = 1;
+    let i = 0;
+    while (n << i < length) {
+      i++;
+    }
+    return i;
   }
 }

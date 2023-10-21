@@ -64,23 +64,3 @@ class Heap {
     }
   }
 }
-
-// TESTING
-
-const heap = new Heap();
-
-for (let i = 0; i < 10; i++) {
-  heap.push(10 - i);
-}
-
-for (let i = 0; i < 10; i++) {
-  console.log(heap.heap);
-  console.log(heap.pop());
-}
-
-const heap1 = new Heap([5, 3, 27, 99, 45, 1, 0, 20])
-
-for (let i = 0; i < 10; i++) {
-  console.log(heap1.heap);
-  console.log(heap1.pop());
-}
