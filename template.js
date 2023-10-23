@@ -22,14 +22,9 @@ let lastData = 1;
 let meta = -2;
 let data = [];
 
-const readline = require("readline");
-const rl = readline.createInterface({
-  input: process.stdin
-});
-
+const rl = require("readline").createInterface({input: process.stdin});
 rl.on("line", line => {
   if (SKIP.includes(lineNumber)) {
-
   } else if (lineNumber === meta) {
       lastData = lineNumber + Number(line);
   } else {
@@ -38,18 +33,19 @@ rl.on("line", line => {
       const preparedData = prepareData(data);
       const answer = solve(...preparedData);
       printAnswer(answer);
-      data = [];
+      data.length = 0;
       lineNumber = 0;
     }
   }
-  lineNumber++;
+  ++lineNumber;
 });
 
 function printAnswer(answer) {
   if (Array.isArray(answer)) {
-    console.log(answer.join(" "));
+    answer[answer.length - 1] += "\n";
+    process.stdout.write(answer.join(" "));
   }
   else {
-    console.log(answer.toString());
+    process.stdout.write(answer + "\n");
   }
 }
