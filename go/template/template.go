@@ -26,7 +26,19 @@ func next() int {
 	return n
 }
 
-func write(n int) {
+func nexts() string {
+	var n string
+	fmt.Fscan(r, &n)
+	return n
+}
+
+func nextf() float64 {
+	var n float64
+	fmt.Fscan(r, &n)
+	return n
+}
+
+func write[T int | int64 | float64 | string](n T) {
 	fmt.Fprintln(w, n)
 }
 
