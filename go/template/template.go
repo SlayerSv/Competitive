@@ -38,8 +38,28 @@ func nextf() float64 {
 	return n
 }
 
-func write[T int | int64 | float64 | string](n T) {
-	fmt.Fprintln(w, n)
+func print(n ...interface{}) {
+	fmt.Fprintln(w, n...)
+}
+
+func min[T int | int64 | float64 | string](b ...T) (min T) {
+	min = b[0]
+	for i := 1; i < len(b); i++ {
+		if b[i] < min {
+			min = b[i]
+		}
+	}
+	return
+}
+
+func max[T int | int64 | float64 | string](b ...T) (max T) {
+	max = b[0]
+	for i := 1; i < len(b); i++ {
+		if b[i] > max {
+			max = b[i]
+		}
+	}
+	return
 }
 
 var r = bufio.NewReader(os.Stdin)
