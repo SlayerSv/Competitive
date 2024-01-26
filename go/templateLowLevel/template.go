@@ -9,9 +9,14 @@ func solve() {
 }
 
 func main() {
-	stats, _ := os.Stdin.Stat()
+	file, err := os.Open("in.txt")
+	if err != nil {
+		file = os.Stdin
+	}
+	defer file.Close()
+	stats, _ := file.Stat()
 	data = make([]byte, stats.Size())
-	os.Stdin.Read(data)
+	file.Read(data)
 	t := 1
 	t = next()
 	ans = make([]byte, 0, t*10)
@@ -41,23 +46,21 @@ func next() int {
 }
 
 func reverse(bytes []byte) {
-	left := 0
-	right := len(bytes) - 1
-	for left < right {
-		bytes[left], bytes[right] = bytes[right], bytes[left]
-		left++
-		right--
+	n := len(bytes)
+	for i := 0; i < n/2; i++ {
+		bytes[i], bytes[n-1-i] = bytes[n-1-i], bytes[i]
 	}
 }
 
 func print(n int) {
 	num := []byte{}
-	for n >= 0 {
+	if n == 0 {
+		ans = append(ans, '0')
+		return
+	}
+	for n > 0 {
 		num = append(num, byte(n%10+'0'))
 		n /= 10
-		if n == 0 {
-			break
-		}
 	}
 	reverse(num)
 	num = append(num, ' ')
@@ -84,7 +87,7 @@ func max[T int | float64](a ...T) (max T) {
 	return
 }
 
-func abs(a int) int {
+func abs[T int | float64](a T) T {
 	if a < 0 {
 		return -a
 	}
