@@ -27,22 +27,56 @@ func main() {
 	os.Stdout.Write(ans)
 }
 
-func next() int {
-	num := 0
-	for (data[i] == 10 || data[i] == 13 || data[i] == 32) && i < len(data) {
+func nexts() []byte {
+	word := make([]byte, 0, 12)
+	for data[i] == 10 || data[i] == 13 || data[i] == 32 {
 		i++
 	}
+	for data[i] != 32 && data[i] != 10 && data[i] != 13 {
+		word = append(word, data[i])
+		i++
+	}
+	return word
+}
+
+func next() int {
+	return toInt(nexts())
+}
+
+func toInt(word []byte) int {
+	num := 0
+	i := 0
 	sign := 1
-	if data[i] == 45 {
+	if word[i] == 45 {
 		sign = -1
 		i++
 	}
-	for data[i] != 32 && data[i] != 10 && data[i] != 13 && i < len(data) {
-		num = num*10 + int(data[i]-'0')
-		i++
+	for i < len(word) {
+		num = num*10 + int(word[i]-'0')
 	}
-	num *= sign
-	return num
+	return num * sign
+}
+
+func toByte(num int) []byte {
+	word := make([]byte, 0, 12)
+	if num == 0 {
+		word = append(ans, '0')
+		return word
+	}
+	neg := false
+	if num < 0 {
+		num = -num
+		neg = true
+	}
+	for num > 0 {
+		word = append(word, byte(num%10+'0'))
+		num /= 10
+	}
+	if neg {
+		word = append(word, 45)
+	}
+	reverse(word)
+	return word
 }
 
 func reverse(bytes []byte) {
@@ -52,19 +86,17 @@ func reverse(bytes []byte) {
 	}
 }
 
-func print(n int) {
-	num := []byte{}
-	if n == 0 {
-		ans = append(ans, '0')
-		return
+func print(args ...interface{}) {
+	for i := 0; i < len(args); i++ {
+		switch args[i].(type) {
+		case int:
+			ans = append(ans, toByte(args[i].(int))...)
+		case string:
+			ans = append(ans, args[i].(string)...)
+		}
+		ans = append(ans, ' ')
 	}
-	for n > 0 {
-		num = append(num, byte(n%10+'0'))
-		n /= 10
-	}
-	reverse(num)
-	num = append(num, ' ')
-	ans = append(ans, num...)
+	ans = append(ans, '\n')
 }
 
 func min[T int | float64](a ...T) (min T) {
