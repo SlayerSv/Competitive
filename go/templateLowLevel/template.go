@@ -9,14 +9,6 @@ func solve() {
 }
 
 func main() {
-	file, err := os.Open("in.txt")
-	if err != nil {
-		file = os.Stdin
-	}
-	defer file.Close()
-	stats, _ := file.Stat()
-	data = make([]byte, stats.Size())
-	file.Read(data)
 	t := 1
 	t = next()
 	ans = make([]byte, 0, t*10)
@@ -53,6 +45,7 @@ func toInt(word []byte) int {
 	}
 	for i < len(word) {
 		num = num*10 + int(word[i]-'0')
+		i++
 	}
 	return num * sign
 }
@@ -60,8 +53,7 @@ func toInt(word []byte) int {
 func toByte(num int) []byte {
 	word := make([]byte, 0, 12)
 	if num == 0 {
-		word = append(ans, '0')
-		return word
+		return append(word, '0')
 	}
 	neg := false
 	if num < 0 {
@@ -124,6 +116,17 @@ func abs[T int | float64](a T) T {
 		return -a
 	}
 	return a
+}
+
+func init() {
+	file, err := os.Open("in.txt")
+	if err != nil {
+		file = os.Stdin
+	}
+	defer file.Close()
+	stats, _ := file.Stat()
+	data = make([]byte, stats.Size())
+	file.Read(data)
 }
 
 var data []byte
