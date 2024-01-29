@@ -19,6 +19,21 @@ func main() {
 	os.Stdout.Write(ans)
 }
 
+var data []byte
+var i int
+var ans []byte
+
+func init() {
+	file, err := os.Open("in.txt")
+	if err != nil {
+		file = os.Stdin
+	}
+	defer file.Close()
+	stats, _ := file.Stat()
+	data = make([]byte, stats.Size())
+	file.Read(data)
+}
+
 func nexts() []byte {
 	word := make([]byte, 0, 12)
 	for data[i] == 10 || data[i] == 13 || data[i] == 32 {
@@ -80,11 +95,11 @@ func reverse(bytes []byte) {
 
 func print(args ...interface{}) {
 	for i := 0; i < len(args); i++ {
-		switch args[i].(type) {
+		switch val := args[i].(type) {
 		case int:
-			ans = append(ans, toByte(args[i].(int))...)
+			ans = append(ans, toByte(val)...)
 		case string:
-			ans = append(ans, args[i].(string)...)
+			ans = append(ans, val...)
 		}
 		ans = append(ans, ' ')
 	}
@@ -117,18 +132,3 @@ func abs[T int | float64](a T) T {
 	}
 	return a
 }
-
-func init() {
-	file, err := os.Open("in.txt")
-	if err != nil {
-		file = os.Stdin
-	}
-	defer file.Close()
-	stats, _ := file.Stat()
-	data = make([]byte, stats.Size())
-	file.Read(data)
-}
-
-var data []byte
-var i int
-var ans []byte
