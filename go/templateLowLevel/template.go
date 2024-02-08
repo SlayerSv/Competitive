@@ -100,8 +100,8 @@ func print(args ...interface{}) {
 			ans = append(ans, toByte(val)...)
 		case string:
 			ans = append(ans, val...)
-		case byte:
-			ans = append(ans, val)
+		case []byte:
+			ans = append(ans, val...)
 		case []int:
 			for i := 0; i < len(val); i++ {
 				ans = append(ans, toByte(val[i])...)
