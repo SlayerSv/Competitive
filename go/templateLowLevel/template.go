@@ -87,9 +87,8 @@ func toByte(num int) []byte {
 }
 
 func reverse(bytes []byte) {
-	n := len(bytes)
-	for i := 0; i < n/2; i++ {
-		bytes[i], bytes[n-1-i] = bytes[n-1-i], bytes[i]
+	for l, r := 0, len(bytes); l < r; l, r = l+1, r-1 {
+		bytes[l], bytes[r] = bytes[r], bytes[l]
 	}
 }
 
@@ -107,13 +106,18 @@ func print(args ...interface{}) {
 				ans = append(ans, toByte(val[i])...)
 				ans = append(ans, ' ')
 			}
+		case []string:
+			for i := 0; i < len(val); i++ {
+				ans = append(ans, val[i]...)
+				ans = append(ans, ' ')
+			}
 		}
 		ans = append(ans, ' ')
 	}
 	ans = append(ans, '\n')
 }
 
-func min[T int | float64](a ...T) (min T) {
+func Min[T int | float64](a ...T) (min T) {
 	min = a[0]
 	for i := 1; i < len(a); i++ {
 		if a[i] < min {
@@ -123,7 +127,7 @@ func min[T int | float64](a ...T) (min T) {
 	return
 }
 
-func max[T int | float64](a ...T) (max T) {
+func Max[T int | float64](a ...T) (max T) {
 	max = a[0]
 	for i := 1; i < len(a); i++ {
 		if a[i] > max {
