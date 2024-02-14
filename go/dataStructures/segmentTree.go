@@ -28,15 +28,17 @@ func makeNode(i int) Node {
 }
 
 func (seg *seg) get(ql, qr, si, l, r int) Node {
-	if qr <= l || ql >= r {
-		return Node{int(1e10), 0}
-	}
 	if l >= ql && r <= qr {
 		return seg.tree[si]
 	}
 	mid := (l + r) >> 1
-	return seg.update(seg.get(ql, qr, si*2+1, l, mid), seg.get(ql, qr, si*2+2, mid, r))
-
+	if qr <= mid {
+		return seg.get(ql, qr, si*2+1, l, mid)
+	} else if ql >= mid {
+		return seg.get(ql, qr, si*2+2, mid, r)
+	} else {
+		return seg.update(seg.get(ql, qr, si*2+1, l, mid), seg.get(ql, qr, si*2+2, mid, r))
+	}
 }
 
 func (seg *seg) set(i int, node Node, si, l, r int) {
