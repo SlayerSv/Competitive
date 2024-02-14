@@ -11,7 +11,7 @@ func solve() {
 func main() {
 	t := 1
 	t = next()
-	ans = make([]byte, 0, t*10)
+	ans = make([]byte, 0, 2000)
 	for t > 0 {
 		solve()
 		t--
@@ -22,8 +22,10 @@ func main() {
 var data []byte
 var i int
 var ans []byte
+var buff []byte
 
 func init() {
+	buff = make([]byte, 50)
 	file, err := os.Open("in.txt")
 	if err != nil {
 		file = os.Stdin
@@ -35,15 +37,13 @@ func init() {
 }
 
 func nexts() []byte {
-	word := make([]byte, 0, 12)
-	for data[i] == 10 || data[i] == 13 || data[i] == 32 {
-		i++
+	for ; data[i] == 10 || data[i] == 13 || data[i] == 32; i++ {
 	}
-	for data[i] != 32 && data[i] != 10 && data[i] != 13 {
-		word = append(word, data[i])
-		i++
+	j := 0
+	for ; data[i] != 32 && data[i] != 13; i, j = i+1, j+1 {
+		buff[j] = data[i]
 	}
-	return word
+	return buff[:j]
 }
 
 func next() int {
@@ -66,28 +66,30 @@ func toInt(word []byte) int {
 }
 
 func toByte(num int) []byte {
-	word := make([]byte, 0, 12)
+	j := 0
 	if num == 0 {
-		return append(word, '0')
+		buff[0] = '0'
+		return buff[:1]
 	}
 	neg := false
 	if num < 0 {
 		num = -num
 		neg = true
 	}
-	for num > 0 {
-		word = append(word, byte(num%10+'0'))
+	for ; num > 0; j++ {
+		buff[j] = byte(num%10 + '0')
 		num /= 10
 	}
 	if neg {
-		word = append(word, 45)
+		buff[j] = 45
+		j++
 	}
-	reverse(word)
-	return word
+	reverse(buff[:j])
+	return buff[:j]
 }
 
 func reverse(bytes []byte) {
-	for l, r := 0, len(bytes); l < r; l, r = l+1, r-1 {
+	for l, r := 0, len(bytes)-1; l < r; l, r = l+1, r-1 {
 		bytes[l], bytes[r] = bytes[r], bytes[l]
 	}
 }
