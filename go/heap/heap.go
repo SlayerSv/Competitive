@@ -47,12 +47,12 @@ func (h *heap) siftDown(i int) {
 }
 
 func (h *heap) siftUp(i int) {
-	pi := (i - 1) >> 1
-	for pi >= 0 {
+	var pi int
+	for i > 0 {
+		pi = (i - 1) >> 1
 		if h.less(i, pi) {
 			h.arr[i], h.arr[pi] = h.arr[pi], h.arr[i]
 			i = pi
-			pi = (i - 1) >> 1
 		} else {
 			break
 		}
@@ -62,16 +62,16 @@ func (h *heap) siftUp(i int) {
 func (h *heap) Push(val int) {
 	node := makeNode(val)
 	h.arr = append(h.arr, node)
-    h.n++
+	h.n++
 	h.siftUp(h.n - 1)
-    
+
 }
 
 func (h *heap) Pop() Node {
 	x := h.arr[0]
 	h.arr[0] = h.arr[h.n-1]
 	h.arr = h.arr[:h.n-1]
-    h.n -= 1
+	h.n -= 1
 	h.siftDown(0)
 	return x
 }
