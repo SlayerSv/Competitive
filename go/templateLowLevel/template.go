@@ -9,38 +9,48 @@ func solve() {
 }
 
 func main() {
+	defer out.Close()
 	t := 1
-	t = next()
-	ans = make([]byte, 0, 2000)
+	//t = next()
+	ans = make([]byte, 0, 200)
 	for t > 0 {
 		solve()
 		t--
 	}
-	os.Stdout.Write(ans)
+	out.Write(ans)
 }
 
 var data []byte
 var i int
 var ans []byte
 var buff []byte
+var size int
+var in *os.File
+var out *os.File
 
 func init() {
-	buff = make([]byte, 50)
-	file, err := os.Open("in.txt")
+	buff = make([]byte, 30)
+	var err error
+	in, err = os.Open("in.txt")
 	if err != nil {
-		file = os.Stdin
+		in = os.Stdin
 	}
-	defer file.Close()
-	stats, _ := file.Stat()
-	data = make([]byte, stats.Size())
-	file.Read(data)
+	defer in.Close()
+	out, err = os.OpenFile("out.txt", os.O_WRONLY|os.O_TRUNC, 0222)
+	if err != nil {
+		out = os.Stdout
+	}
+	stats, _ := in.Stat()
+	size = int(stats.Size())
+	data = make([]byte, size)
+	in.Read(data)
 }
 
 func nexts() []byte {
 	for ; data[i] == 10 || data[i] == 13 || data[i] == 32; i++ {
 	}
 	j := 0
-	for ; data[i] != 32 && data[i] != 13; i, j = i+1, j+1 {
+	for ; i < size && data[i] != 32 && data[i] != 13; i, j = i+1, j+1 {
 		buff[j] = data[i]
 	}
 	return buff[:j]
