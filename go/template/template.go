@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"io"
 	"os"
 )
 
@@ -28,6 +27,9 @@ func main() {
 	w.Flush()
 }
 
+var r = bufio.NewReader(os.Stdin)
+var w = bufio.NewWriter(os.Stdout)
+
 func next() int {
 	var n int
 	fmt.Fscan(r, &n)
@@ -50,7 +52,7 @@ func print(n ...interface{}) {
 	fmt.Fprintln(w, n...)
 }
 
-func min[T int | float64](b ...T) (min T) {
+func Min[T int | float64](b ...T) (min T) {
 	min = b[0]
 	for i := 1; i < len(b); i++ {
 		if b[i] < min {
@@ -60,7 +62,7 @@ func min[T int | float64](b ...T) (min T) {
 	return
 }
 
-func max[T int | float64](b ...T) (max T) {
+func Max[T int | float64](b ...T) (max T) {
 	max = b[0]
 	for i := 1; i < len(b); i++ {
 		if b[i] > max {
@@ -70,12 +72,9 @@ func max[T int | float64](b ...T) (max T) {
 	return
 }
 
-func abs[T int | float64](a T) T {
+func Abs[T int | float64](a T) T {
 	if a < 0 {
 		return -a
 	}
 	return a
 }
-
-var r io.Reader
-var w = bufio.NewWriter(os.Stdout)
