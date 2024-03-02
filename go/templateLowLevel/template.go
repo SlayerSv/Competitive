@@ -31,12 +31,12 @@ func init() {
 	ans = make([]byte, 0, 2000)
 	buff = make([]byte, 30)
 	var err error
-	in, err = os.Open("in.txt")
+	in, err = os.Open("input.txt")
 	if err != nil {
 		in = os.Stdin
 	}
 	defer in.Close()
-	out, err = os.OpenFile("out.txt", os.O_WRONLY|os.O_TRUNC, 0222)
+	out, err = os.OpenFile("outs.txt", os.O_WRONLY|os.O_TRUNC, 0222)
 	if err != nil {
 		out = os.Stdout
 	}

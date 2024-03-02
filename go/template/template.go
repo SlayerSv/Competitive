@@ -11,20 +11,20 @@ func solve() {
 }
 
 func main() {
-	in, err := os.Open("in.txt")
-	if err != nil {
-		in = os.Stdin
-	}
-	defer in.Close()
-	r = bufio.NewReader(in)
-
 	t := 1
-	t = next()
+	//t = next()
 	for t > 0 {
 		solve()
 		t--
 	}
 	w.Flush()
+}
+
+func init() {
+	in, err := os.Open("input.txt")
+	if err == nil {
+		r = bufio.NewReader(in)
+	}
 }
 
 var r = bufio.NewReader(os.Stdin)
@@ -36,10 +36,10 @@ func next() int {
 	return n
 }
 
-func nexts() string {
+func nexts() []byte {
 	var n string
 	fmt.Fscan(r, &n)
-	return n
+	return []byte(n)
 }
 
 func nextf() float64 {
