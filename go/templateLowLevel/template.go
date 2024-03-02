@@ -12,7 +12,6 @@ func main() {
 	defer out.Close()
 	t := 1
 	//t = next()
-	ans = make([]byte, 0, 200)
 	for t > 0 {
 		solve()
 		t--
@@ -29,6 +28,7 @@ var in *os.File
 var out *os.File
 
 func init() {
+	ans = make([]byte, 0, 2000)
 	buff = make([]byte, 30)
 	var err error
 	in, err = os.Open("in.txt")
@@ -47,13 +47,14 @@ func init() {
 }
 
 func nexts() []byte {
+	s := make([]byte, 0)
 	for ; data[i] == 10 || data[i] == 13 || data[i] == 32; i++ {
 	}
-	j := 0
-	for ; i < size && data[i] != 32 && data[i] != 13; i, j = i+1, j+1 {
-		buff[j] = data[i]
+	for i < size && data[i] != 32 && data[i] != 13 && data[i] != 10 {
+		s = append(s, data[i])
+		i++
 	}
-	return buff[:j]
+	return s
 }
 
 func next() int {
@@ -62,21 +63,20 @@ func next() int {
 
 func toInt(word []byte) int {
 	num := 0
-	i := 0
+	j := 0
 	sign := 1
-	if word[i] == 45 {
+	if word[j] == 45 {
 		sign = -1
-		i++
+		j++
 	}
-	for i < len(word) {
-		num = num*10 + int(word[i]-'0')
-		i++
+	for j < len(word) {
+		num = num*10 + int(word[j]-'0')
+		j++
 	}
 	return num * sign
 }
 
 func toByte(num int) []byte {
-	j := 0
 	if num == 0 {
 		buff[0] = '0'
 		return buff[:1]
@@ -86,6 +86,7 @@ func toByte(num int) []byte {
 		num = -num
 		neg = true
 	}
+	j := 0
 	for ; num > 0; j++ {
 		buff[j] = byte(num%10 + '0')
 		num /= 10
@@ -149,7 +150,7 @@ func Max[T int | float64](a ...T) (max T) {
 	return
 }
 
-func abs[T int | float64](a T) T {
+func Abs[T int | float64](a T) T {
 	if a < 0 {
 		return -a
 	}
