@@ -28,7 +28,7 @@ var in *os.File
 var out *os.File
 
 func init() {
-	ans = make([]byte, 0, 2000)
+	ans = make([]byte, 0, 200)
 	buff = make([]byte, 30)
 	var err error
 	in, err = os.Open("input.txt")
@@ -46,19 +46,47 @@ func init() {
 	in.Read(data)
 }
 
-func nexts() []byte {
-	s := make([]byte, 0)
-	for ; data[i] == 10 || data[i] == 13 || data[i] == 32; i++ {
-	}
-	for i < size && data[i] != 32 && data[i] != 13 && data[i] != 10 {
-		s = append(s, data[i])
+func skipWS() {
+	for data[i] == 10 || data[i] == 13 || data[i] == 32 {
 		i++
 	}
-	return s
 }
 
-func next() int {
-	return toInt(nexts())
+func next() []byte {
+	skipWS()
+	j := 0
+	for i < size && data[i] != 32 && data[i] != 13 && data[i] != 10 {
+		buff[j] = data[i]
+		i++
+		j++
+	}
+	return buff[:j]
+}
+
+func nexts() []byte {
+	w := make([]byte, 0)
+	skipWS()
+	for i < size && data[i] != 32 && data[i] != 13 && data[i] != 10 {
+		w = append(w, data[i])
+		i++
+	}
+	return w
+}
+
+func nexti() int {
+	return toInt(next())
+}
+
+func nextf() float64 {
+	return toFloat(next())
+}
+
+func nextSi(n int) []int {
+	s := make([]int, n)
+	for i := 0; i < n; i++ {
+		s[i] = nexti()
+	}
+	return s
 }
 
 func toInt(word []byte) int {
@@ -74,6 +102,35 @@ func toInt(word []byte) int {
 		j++
 	}
 	return num * sign
+}
+
+func toFloat(word []byte) float64 {
+	m := 0.0
+	d := 0
+	j := 0
+	sign := 1.0
+	if word[j] == 45 {
+		sign = -1.0
+		j++
+	}
+	n := len(word)
+	for j < n {
+		if word[j] == '.' {
+			d = j
+			j++
+			continue
+		}
+		m = m*10 + float64(word[j]-'0')
+		j++
+	}
+	m *= sign
+	if d > 0 {
+		for n-d > 1 {
+			m /= 10
+			d++
+		}
+	}
+	return m
 }
 
 func toByte(num int) []byte {
