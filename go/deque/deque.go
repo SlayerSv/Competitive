@@ -65,15 +65,15 @@ func (d *deque) grow() {
 }
 
 func (d *deque) Back() int {
-	if d.length == 0 {
-		return 0
+	if d.IsEmpty() {
+		panic("Deque is empty")
 	}
 	return d.arr[(d.back+d.capacity-1)%d.capacity]
 }
 
 func (d *deque) Front() int {
-	if d.length == 0 {
-		return 0
+	if d.IsEmpty() {
+		panic("Deque is empty")
 	}
 	return d.arr[(d.front+1)%d.capacity]
 }
@@ -86,4 +86,8 @@ func (d *deque) Get(i int) int {
 		i = d.length + i
 	}
 	return d.arr[(d.front+i+1)%d.capacity]
+}
+
+func (d *deque) IsEmpty() bool {
+	return d.length == 0
 }
