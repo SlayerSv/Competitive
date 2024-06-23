@@ -10,13 +10,15 @@ func solve() {
 
 func main() {
 	defer out.Close()
+	defer func() {
+		out.Write(ans)
+	}()
 	t := 1
-	//t = next()
+	//t = nexti()
 	for t > 0 {
 		solve()
 		t--
 	}
-	out.Write(ans)
 }
 
 var data []byte
