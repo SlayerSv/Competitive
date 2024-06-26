@@ -116,6 +116,28 @@ func (t *Treap) Upper(val int) int {
 	return node.val
 }
 
+func (t *Treap) Min() int {
+    tmp := t.Root;
+    for tmp != nil && tmp.l != nil {
+      tmp = tmp.l;
+    }
+    if tmp != nil {
+        return tmp.val
+    }
+    return -1
+}
+
+func (t *Treap) Max() int {
+    tmp := t.Root;
+    for tmp != nil && tmp.r != nil {
+      tmp = tmp.r;
+    }
+    if tmp != nil {
+        return tmp.val
+    }
+    return -1
+}
+
 func (t *Treap) Inorder(node *Node) {
 	if node == nil {
 		return
