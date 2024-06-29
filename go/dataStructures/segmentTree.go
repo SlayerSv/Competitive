@@ -6,24 +6,17 @@ type seg struct {
 }
 
 type Node struct {
-	val   int
-	count int
+	val int
 }
 
 func (seg *seg) update(v1, v2 Node) Node {
-	if v1.val < v2.val {
-		return v1
-	}
-	if v1.val == v2.val {
-		v2.count += v1.count
-	}
-	return v2
+	v1.val += v2.val
+	return v1
 }
 
 func makeNode(i int) Node {
 	return Node{
-		val:   i,
-		count: 1,
+		val: i,
 	}
 }
 
@@ -41,16 +34,18 @@ func (seg *seg) get(ql, qr, si, l, r int) Node {
 	}
 }
 
-func (seg *seg) set(i int, node Node, si, l, r int) {
+func (seg *seg) set(ql, qr, val, si, l, r int) {
 	if r-l == 1 {
-		seg.tree[si] = node
+		node := makeNode(val)
+		seg.tree[si] = seg.update(seg.tree[si], node)
 		return
 	}
 	mid := (l + r) >> 1
-	if i < mid {
-		seg.set(i, node, si*2+1, l, mid)
-	} else {
-		seg.set(i, node, si*2+2, mid, r)
+	if ql < mid {
+		seg.set(ql, qr, val, si*2+1, l, mid)
+	}
+	if qr > mid {
+		seg.set(ql, qr, val, si*2+2, mid, r)
 	}
 	seg.tree[si] = seg.update(seg.tree[si*2+1], seg.tree[si*2+2])
 }
@@ -59,9 +54,8 @@ func (seg *seg) Get(ql, qr int) Node {
 	return seg.get(ql, qr, 0, 0, seg.n)
 }
 
-func (seg *seg) Set(i, val int) {
-	node := makeNode(val)
-	seg.set(i, node, 0, 0, seg.n)
+func (seg *seg) Set(ql, qr int, val int) {
+	seg.set(ql, qr, val, 0, 0, seg.n)
 }
 
 func (seg *seg) build(arr []int) {
@@ -73,6 +67,6 @@ func (seg *seg) build(arr []int) {
 	seg.tree = make([]Node, l*2-1)
 	seg.n = l
 	for i := 0; i < n; i++ {
-		seg.Set(i, arr[i])
+		seg.Set(i, i+1, arr[i])
 	}
 }
