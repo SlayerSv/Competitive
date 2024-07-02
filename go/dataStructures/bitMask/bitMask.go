@@ -21,11 +21,11 @@ func (bm bitmask) Invert(i int) {
 }
 
 func (bm bitmask) Count() int {
-	c := 0
-	for i := 0; i < 64; i++ {
-		if bm.mask&1<<i != 0 {
-			c++
-		}
+	c := bm.mask
+	count := 0
+	for c != 0 {
+		c &= c - 1
+		count++
 	}
-	return c
+	return count
 }
