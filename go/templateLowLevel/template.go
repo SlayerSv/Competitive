@@ -48,8 +48,17 @@ func init() {
 	in.Read(data)
 }
 
+func isWS(b byte) bool {
+	switch b {
+	case ' ', '\r', '\n', '\t':
+		return true
+	default:
+		return false
+	}
+}
+
 func skipWS() {
-	for data[i] == 10 || data[i] == 13 || data[i] == 32 {
+	for i < size && isWS(data[i]) {
 		i++
 	}
 }
@@ -57,7 +66,7 @@ func skipWS() {
 func next() []byte {
 	skipWS()
 	j := 0
-	for i < size && data[i] != 32 && data[i] != 13 && data[i] != 10 {
+	for i < size && !isWS(data[i]) {
 		buff[j] = data[i]
 		i++
 		j++
@@ -68,9 +77,22 @@ func next() []byte {
 func nexts() []byte {
 	w := make([]byte, 0)
 	skipWS()
-	for i < size && data[i] != 32 && data[i] != 13 && data[i] != 10 {
+	for i < size && !isWS(data[i]) {
 		w = append(w, data[i])
 		i++
+	}
+	return w
+}
+
+func nextLine() []byte {
+	w := make([]byte, 0)
+	for i < size && data[i] != 10 {
+		w = append(w, data[i])
+		i++
+	}
+	i++
+	if data[len(data)-1] == 'r' {
+		w = w[:len(data)-1]
 	}
 	return w
 }
