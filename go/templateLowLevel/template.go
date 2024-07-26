@@ -64,6 +64,8 @@ func skipWS() {
 		} else if data[i] == '\n' {
 			i++
 			break
+		} else {
+			break
 		}
 	}
 }
