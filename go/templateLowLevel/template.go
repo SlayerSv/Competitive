@@ -38,7 +38,7 @@ func init() {
 		in = os.Stdin
 	}
 	defer in.Close()
-	out, err = os.OpenFile("outs.txt", os.O_WRONLY|os.O_TRUNC, 0222)
+	out, err = os.OpenFile("output.txt", os.O_WRONLY|os.O_TRUNC, 0666)
 	if err != nil {
 		out = os.Stdout
 	}
@@ -58,43 +58,44 @@ func isWS(b byte) bool {
 }
 
 func skipWS() {
-	for i < size && isWS(data[i]) {
-		i++
+	for i < size {
+		if data[i] == ' ' || data[i] == '\r' {
+			i++
+		} else if data[i] == '\n' {
+			i++
+			break
+		}
 	}
 }
 
 func next() []byte {
-	skipWS()
-	j := 0
+	start := i
 	for i < size && !isWS(data[i]) {
-		buff[j] = data[i]
 		i++
-		j++
 	}
-	return buff[:j]
+	skipWS()
+	return data[start:i]
 }
 
 func nexts() []byte {
-	w := make([]byte, 0)
-	skipWS()
-	for i < size && !isWS(data[i]) {
-		w = append(w, data[i])
-		i++
-	}
-	return w
+	return append([]byte{}, next()...)
 }
 
 func nextLine() []byte {
-	w := make([]byte, 0)
+	return append([]byte{}, nextLineSlice()...)
+}
+
+func nextLineSlice() []byte {
+	start := i
 	for i < size && data[i] != 10 {
-		w = append(w, data[i])
 		i++
 	}
-	i++
-	if data[len(data)-1] == 'r' {
-		w = w[:len(data)-1]
+	off := 1
+	if data[i-1] == 'r' {
+		off++
 	}
-	return w
+	i++
+	return data[start : i-off]
 }
 
 func nexti() int {
@@ -180,9 +181,9 @@ func toByte(num int) []byte {
 	return buff[:j]
 }
 
-func reverse(bytes []byte) {
-	for l, r := 0, len(bytes)-1; l < r; l, r = l+1, r-1 {
-		bytes[l], bytes[r] = bytes[r], bytes[l]
+func reverse[E any](sl []E) {
+	for l, r := 0, len(sl)-1; l < r; l, r = l+1, r-1 {
+		sl[l], sl[r] = sl[r], sl[l]
 	}
 }
 
@@ -205,7 +206,10 @@ func print(args ...interface{}) {
 				ans = append(ans, val[i]...)
 				ans = append(ans, ' ')
 			}
+		case byte:
+			ans = append(ans, val)
 		}
+
 		ans = append(ans, ' ')
 	}
 	ans = append(ans, '\n')
