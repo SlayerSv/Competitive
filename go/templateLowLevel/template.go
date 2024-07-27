@@ -75,8 +75,9 @@ func next() []byte {
 	for i < size && !isWS(data[i]) {
 		i++
 	}
+	end := i
 	skipWS()
-	return data[start:i]
+	return data[start:end]
 }
 
 func nexts() []byte {
