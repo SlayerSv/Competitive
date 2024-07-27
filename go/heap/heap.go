@@ -59,12 +59,10 @@ func (h *heap) siftUp(i int) {
 	}
 }
 
-func (h *heap) Push(val int) {
-	node := makeNode(val)
+func (h *heap) Push(node Node) {
 	h.arr = append(h.arr, node)
 	h.n++
 	h.siftUp(h.n - 1)
-
 }
 
 func (h *heap) Pop() Node {
