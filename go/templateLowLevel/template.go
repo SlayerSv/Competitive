@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -211,6 +212,8 @@ func print(args ...interface{}) {
 			}
 		case byte:
 			ans = append(ans, val)
+		default:
+			ans = append(ans, fmt.Sprint(val)...)
 		}
 
 		ans = append(ans, ' ')
