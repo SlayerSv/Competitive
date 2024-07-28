@@ -68,11 +68,12 @@ func nextLineSlice() []byte {
 }
 
 func nextLine() []byte {
-	return bytes.Clone(nextLineSlice())
+	line, _ := r.ReadBytes('\n')
+	return bytes.TrimSpace(line)
 }
 
 func nextString() string {
-	s := nextLineSlice()
+	s, _ := r.ReadString('\n')
 	return strings.TrimSpace(string(s))
 }
 
