@@ -35,7 +35,8 @@ func init() {
 	if err != nil {
 		in = os.Stdin
 	}
-	r = bufio.NewReader(in)
+	stats, _ := in.Stat()
+	r = bufio.NewReaderSize(in, int(stats.Size()))
 	out, err := os.OpenFile("output.txt", os.O_WRONLY|os.O_TRUNC, 0666)
 	if err != nil {
 		out = os.Stdout
@@ -45,11 +46,13 @@ func init() {
 
 func nextIntSlice() []int {
 	line := nextLineSlice()
-	subs := bytes.Fields(line)
+	subs := bytes.Split(line, []byte{' '})
 	s := make([]int, 0, len(subs))
-	for i := range subs {
+	i, n := 0, len(subs)
+	for i < n {
 		val, _ := strconv.Atoi(string(subs[i]))
-		s = append(s, val)
+		s[i] = val
+		i++
 	}
 	return s
 }
