@@ -47,7 +47,7 @@ func init() {
 func nextIntSlice() []int {
 	line := nextLineSlice()
 	subs := bytes.Split(line, []byte{' '})
-	s := make([]int, 0, len(subs))
+	s := make([]int, len(subs))
 	i, n := 0, len(subs)
 	for i < n {
 		val, _ := strconv.Atoi(string(subs[i]))
