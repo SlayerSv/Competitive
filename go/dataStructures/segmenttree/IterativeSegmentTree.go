@@ -1,4 +1,4 @@
-package dataStructures
+package segmenttree
 
 type SegmentTree struct {
 	tree []int
