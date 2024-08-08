@@ -11,11 +11,11 @@ func mst(graph [][][2]int) {
 		if connected[node.v] {
 			continue
 		}
-		visited[node.v] = true
+		connected[node.v] = true
 		n--
 		for _, neigh := range graph[node.v] {
 			to, dist := neigh[0], neigh[1]
-			if visited[to] {
+			if connected[to] {
 				continue
 			}
 			q.Push(makeNode(to, dist))
