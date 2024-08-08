@@ -6,11 +6,13 @@ type Node struct {
 	count    int
 	l        *Node
 	r        *Node
+	size     int // size of the subtree
 }
 
 type Treap struct {
 	Root *Node
 	Seed int
+	Size int
 }
 
 func merge(a, b *Node) *Node {
@@ -22,9 +24,11 @@ func merge(a, b *Node) *Node {
 	}
 	if a.priority > b.priority {
 		a.r = merge(a.r, b)
+		recalcSize(a)
 		return a
 	} else {
 		b.l = merge(a, b.l)
+		recalcSize(b)
 		return b
 	}
 }
@@ -40,7 +44,18 @@ func split(key int, node *Node) (l *Node, r *Node) {
 		r = node
 		l, r.l = split(key, node.l)
 	}
+	recalcSize(node)
 	return
+}
+
+func recalcSize(node *Node) {
+	node.size = 1
+	if node.l != nil {
+		node.size += node.l.size
+	}
+	if node.r != nil {
+		node.size += node.r.size
+	}
 }
 
 func (t *Treap) Add(val int) {
@@ -53,6 +68,7 @@ func (t *Treap) Add(val int) {
 		equal = t.MakeNode(val)
 	}
 	t.Root = merge(l, merge(equal, r))
+	t.Size++
 }
 
 func (t *Treap) Delete(val int) {
@@ -65,6 +81,7 @@ func (t *Treap) Delete(val int) {
 		return
 	}
 	t.Root = merge(l, r)
+	t.Size--
 }
 
 func (t *Treap) Has(val int) bool {
@@ -82,11 +99,33 @@ func (t *Treap) Has(val int) bool {
 	return false
 }
 
+func (t *Treap) GetByIndex(i int) int {
+	node := t.Root
+	val := 0
+	for {
+		if node.l != nil {
+			if i <= node.l.size {
+				node = node.l
+				continue
+			}
+			i -= node.l.size
+		}
+		if i == 1 {
+			val = node.val
+			break
+		}
+		node = node.r
+		i--
+	}
+	return val
+}
+
 func (t *Treap) MakeNode(val int) *Node {
 	return &Node{
 		priority: t.Rand(),
 		val:      val,
 		count:    1,
+		size:     1,
 	}
 }
 
@@ -117,25 +156,25 @@ func (t *Treap) Upper(val int) int {
 }
 
 func (t *Treap) Min() int {
-    tmp := t.Root;
-    for tmp != nil && tmp.l != nil {
-      tmp = tmp.l;
-    }
-    if tmp != nil {
-        return tmp.val
-    }
-    return -1
+	tmp := t.Root
+	for tmp != nil && tmp.l != nil {
+		tmp = tmp.l
+	}
+	if tmp != nil {
+		return tmp.val
+	}
+	return -1
 }
 
 func (t *Treap) Max() int {
-    tmp := t.Root;
-    for tmp != nil && tmp.r != nil {
-      tmp = tmp.r;
-    }
-    if tmp != nil {
-        return tmp.val
-    }
-    return -1
+	tmp := t.Root
+	for tmp != nil && tmp.r != nil {
+		tmp = tmp.r
+	}
+	if tmp != nil {
+		return tmp.val
+	}
+	return -1
 }
 
 func (t *Treap) Inorder(node *Node) {
