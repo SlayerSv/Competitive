@@ -49,7 +49,7 @@ func split(key int, node *Node) (l *Node, r *Node) {
 }
 
 func recalcSize(node *Node) {
-	node.size = 1
+	node.size = node.count
 	if node.l != nil {
 		node.size += node.l.size
 	}
@@ -99,6 +99,7 @@ func (t *Treap) Has(val int) bool {
 	return false
 }
 
+// must be 1-based index
 func (t *Treap) GetByIndex(i int) int {
 	node := t.Root
 	val := 0
