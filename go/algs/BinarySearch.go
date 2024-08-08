@@ -1,4 +1,4 @@
-package main
+package algs
 
 // returns index of the first element that is not less than x
 func leftBinSearch(stops []int, x int) int {

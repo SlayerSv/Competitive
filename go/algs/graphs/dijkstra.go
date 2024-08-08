@@ -1,34 +1,37 @@
-package main
+package graphs
 
-func Dijsktra(graph [][][2]int, node int) []int {
+func Dijsktra(graph [][][2]int, node int) ([]int, []int) {
 	n := len(graph)
 	dists := make([]int, n)
+	from := make([]int, n)
 	const INF int = 1e18
 	for i := 0; i < n; i++ {
 		dists[i] = INF
+		from[i] = -1
 	}
 	dists[node] = 0
 	pq := heap{}
 	pq.Push(makeNode(node, 0))
 	for pq.Len() > 0 {
 		node := pq.Pop()
-		if dists[node.val] < node.dist {
+		if dists[node.v] < node.dist {
 			continue
 		}
-		dists[node.val] = node.dist
-		for _, neigh := range graph[node.val] {
-			dist := dists[node.val] + neigh[1]
+		dists[node.v] = node.dist
+		for _, neigh := range graph[node.v] {
+			dist := dists[node.v] + neigh[1]
 			if dists[neigh[0]] <= dist {
 				continue
 			}
+			from[neigh[0]] = node.v
 			pq.Push(makeNode(neigh[0], dist))
 		}
 	}
-	return dists
+	return dists, from
 }
 
 type Node struct {
-	val  int
+	v    int
 	dist int
 }
 
@@ -37,9 +40,9 @@ type heap struct {
 	n   int
 }
 
-func makeNode(val, dist int) Node {
+func makeNode(v, dist int) Node {
 	return Node{
-		val:  val,
+		v:    v,
 		dist: dist,
 	}
 }

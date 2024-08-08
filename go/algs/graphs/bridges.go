@@ -1,4 +1,4 @@
-package main
+package graphs
 
 var n int
 var graph = make([][]int, n)
