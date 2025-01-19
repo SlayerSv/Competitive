@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"cmp"
 	"fmt"
 	"os"
 	"slices"
@@ -10,10 +11,18 @@ import (
 	"strings"
 )
 
-func solve() {
-	ans := 0
+func runTestCases() {
+	n := nextInt()
+
+	ans := solve(n)
 
 	fmt.Fprintln(w, ans)
+}
+
+func solve(n int) int {
+	ans := n
+
+	return ans
 }
 
 func main() {
@@ -21,10 +30,9 @@ func main() {
 	t := 1
 	//t = nextInt()
 	for t > 0 {
-		solve()
+		runTestCases()
 		t--
 	}
-
 }
 
 var r *bufio.Reader
@@ -46,11 +54,14 @@ func init() {
 
 func nextIntSlice() []int {
 	line := nextLineSlice()
-	subs := bytes.Split(line, []byte{' '})
+	subs := bytes.Fields(line)
 	s := make([]int, len(subs))
 	i, n := 0, len(subs)
 	for i < n {
-		val, _ := strconv.Atoi(string(subs[i]))
+		val, err := strconv.Atoi(string(subs[i]))
+		if err != nil {
+			panic(err)
+		}
 		s[i] = val
 		i++
 	}
@@ -58,11 +69,17 @@ func nextIntSlice() []int {
 }
 
 func nextLineSlice() []byte {
-	line, hasMore, _ := r.ReadLine()
+	line, hasMore, err := r.ReadLine()
+	if err != nil {
+		panic(err)
+	}
 	if hasMore {
 		tmp := slices.Clone(line)
 		for hasMore {
-			line, hasMore, _ = r.ReadLine()
+			line, hasMore, err = r.ReadLine()
+			if err != nil {
+				panic(err)
+			}
 			tmp = append(tmp, line...)
 		}
 		line = tmp
@@ -71,52 +88,50 @@ func nextLineSlice() []byte {
 }
 
 func nextLine() []byte {
-	line, _ := r.ReadBytes('\n')
-	return bytes.TrimSpace(line)
+	line, err := r.ReadBytes('\n')
+	if err != nil {
+		panic(err)
+	}
+	return line
 }
 
 func nextString() string {
-	s, _ := r.ReadString('\n')
+	s, err := r.ReadString('\n')
+	if err != nil {
+		panic(err)
+	}
 	return strings.TrimSpace(string(s))
 }
 
 func nextInt() int {
 	line := nextLineSlice()
-	val, _ := strconv.Atoi(string(line))
+	val, err := strconv.Atoi(string(line))
+	if err != nil {
+		panic(err)
+	}
 	return val
 }
 
 func next2Int() (int, int) {
 	line := nextLineSlice()
 	nums := bytes.Fields(line)
-	v1, _ := strconv.Atoi(string(nums[0]))
-	v2, _ := strconv.Atoi(string(nums[1]))
+	if len(nums) > 2 {
+		panic("next2int tries to convert more than 2 values")
+	}
+	v1, err := strconv.Atoi(string(nums[0]))
+	if err != nil {
+		panic(err)
+	}
+	v2, err := strconv.Atoi(string(nums[1]))
+	if err != nil {
+		panic(err)
+	}
 	return v1, v2
 }
 
-func Min[T int | float64](b ...T) (min T) {
-	min = b[0]
-	for i := 1; i < len(b); i++ {
-		if b[i] < min {
-			min = b[i]
-		}
-	}
-	return
-}
-
-func Max[T int | float64](b ...T) (max T) {
-	max = b[0]
-	for i := 1; i < len(b); i++ {
-		if b[i] > max {
-			max = b[i]
-		}
-	}
-	return
-}
-
 func Abs[T int | float64](a T) T {
-	if a < 0 {
-		return -a
+	if cmp.Less(a, 0) {
+		a = -a
 	}
 	return a
 }
