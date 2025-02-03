@@ -14,15 +14,15 @@ func Dijsktra(graph [][][2]int, node int) ([]int, []int) {
 	pq.Push(makeNode(node, 0))
 	for pq.Len() > 0 {
 		node := pq.Pop()
-		if dists[node.v] < node.dist {
+		if node.dist > dists[node.v] {
 			continue
 		}
-		dists[node.v] = node.dist
 		for _, neigh := range graph[node.v] {
 			dist := dists[node.v] + neigh[1]
-			if dists[neigh[0]] <= dist {
+			if dist >= dists[neigh[0]] {
 				continue
 			}
+            dists[neigh[0]] = dist
 			from[neigh[0]] = node.v
 			pq.Push(makeNode(neigh[0], dist))
 		}
