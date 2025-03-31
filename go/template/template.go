@@ -115,8 +115,8 @@ func nextInt() int {
 func next2Int() (int, int) {
 	line := nextLineSlice()
 	nums := bytes.Fields(line)
-	if len(nums) > 2 {
-		panic("next2int tries to convert more than 2 values")
+	if len(nums) != 2 {
+		panic("next2int expects exactly 2 values")
 	}
 	v1, err := strconv.Atoi(string(nums[0]))
 	if err != nil {
