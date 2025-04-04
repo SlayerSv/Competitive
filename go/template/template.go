@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func runTestCases() {
+func runTestCase() {
 	n := nextInt()
 
 	ans := solve(n)
@@ -30,7 +30,7 @@ func main() {
 	t := 1
 	//t = nextInt()
 	for t > 0 {
-		runTestCases()
+		runTestCase()
 		t--
 	}
 }
