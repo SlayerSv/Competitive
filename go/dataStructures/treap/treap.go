@@ -1,5 +1,9 @@
 package treap
 
+import (
+    "math/rand"
+)
+
 type Node struct {
 	priority int
 	val      int
@@ -11,8 +15,11 @@ type Node struct {
 
 type Treap struct {
 	Root *Node
-	Seed int
 	Size int
+}
+
+func NewTreap() *Treap {
+    return &Treap{}
 }
 
 func merge(a, b *Node) *Node {
@@ -33,16 +40,17 @@ func merge(a, b *Node) *Node {
 	}
 }
 
+// l = (lowest...key-1)  r = (key...highest)
 func split(key int, node *Node) (l *Node, r *Node) {
 	if node == nil {
 		return
 	}
-	if node.val < key {
+	if key <= node.val {
+        r = node
+		l, r.l = split(key, node.l)
+	} else {
 		l = node
 		l.r, r = split(key, node.r)
-	} else {
-		r = node
-		l, r.l = split(key, node.l)
 	}
 	recalcSize(node)
 	return
@@ -99,11 +107,15 @@ func (t *Treap) Has(val int) bool {
 	return false
 }
 
-// must be 1-based index
+// 0-based index
 func (t *Treap) GetByIndex(i int) int {
+    val := -1
 	node := t.Root
-	val := 0
+    i++ // turn to 1-based index for more simple logic
 	for {
+        if node == nil {
+            break
+        }
 		if node.l != nil {
 			if i <= node.l.size {
 				node = node.l
@@ -123,7 +135,7 @@ func (t *Treap) GetByIndex(i int) int {
 
 func (t *Treap) MakeNode(val int) *Node {
 	return &Node{
-		priority: t.Rand(),
+		priority: rand.Int(),
 		val:      val,
 		count:    1,
 		size:     1,
@@ -184,9 +196,4 @@ func (t *Treap) Inorder(node *Node) {
 	}
 	t.Inorder(node.l)
 	t.Inorder(node.r)
-}
-
-func (t *Treap) Rand() int {
-	t.Seed = (1103515245*t.Seed + 12345) % 2147483648
-	return t.Seed
 }
