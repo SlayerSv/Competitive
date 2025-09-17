@@ -70,7 +70,7 @@ func nextIntSlice() []int {
 
 func nextLineSlice() []byte {
 	line, hasMore, err := r.ReadLine()
-	if err != nil {
+	if err != nil && err.Error() != "EOF" {
 		panic(err)
 	}
 	if hasMore {
@@ -89,7 +89,7 @@ func nextLineSlice() []byte {
 
 func nextLine() []byte {
 	line, err := r.ReadBytes('\n')
-	if err != nil {
+	if err != nil && err.Error() != "EOF" {
 		panic(err)
 	}
 	return line
@@ -97,7 +97,7 @@ func nextLine() []byte {
 
 func nextString() string {
 	s, err := r.ReadString('\n')
-	if err != nil {
+	if err != nil && err.Error() != "EOF" {
 		panic(err)
 	}
 	return strings.TrimSpace(string(s))
