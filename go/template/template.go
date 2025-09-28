@@ -129,6 +129,27 @@ func next2Int() (int, int) {
 	return v1, v2
 }
 
+func next3Int() (int, int, int) {
+	line := nextLineSlice()
+	nums := bytes.Fields(line)
+	if len(nums) != 3 {
+		panic("next3int expects exactly 3 values")
+	}
+	v1, err := strconv.Atoi(string(nums[0]))
+	if err != nil {
+		panic(err)
+	}
+	v2, err := strconv.Atoi(string(nums[1]))
+	if err != nil {
+		panic(err)
+	}
+	v3, err := strconv.Atoi(string(nums[2]))
+	if err != nil {
+		panic(err)
+	}
+	return v1, v2, v3
+}
+
 func Abs[T int | float64](a T) T {
 	if cmp.Less(a, 0) {
 		a = -a
