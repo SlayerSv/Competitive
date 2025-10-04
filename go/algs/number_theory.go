@@ -8,3 +8,13 @@ func isPrime(n int) bool {
 	}
 	return true
 }
+
+func gcd(a, b int) int {
+	for {
+		if a == 0 {
+			return b
+		}
+		b %= a
+		a, b = b, a
+	}
+}
