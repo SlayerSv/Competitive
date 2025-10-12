@@ -11,12 +11,20 @@ func isPrime(n int) bool {
 
 func gcd(a, b int) int {
 	for {
-		if a == 0 {
-			return b
+		if b == 0 {
+			return a
 		}
-		b %= a
+		a %= b
 		a, b = b, a
 	}
+}
+
+func egcd(a, b int) (int, int, int) {
+	if b == 0 {
+		return a, 1, 0
+	}
+	g, x, y := egcd(b, a%b)
+	return g, y, x - y*(a/b)
 }
 
 func phi(n int) int {
@@ -40,4 +48,18 @@ func digitSum(n int) int {
 		n /= 10
 	}
 	return ans
+}
+
+// returns NOT primes bool array
+func sieve(n int) []bool {
+	notPrimes := make([]bool, n+1)
+	notPrimes[0], notPrimes[1] = true, true
+	for i := 2; i*i <= n; i++ {
+		if !notPrimes[i] {
+			for j := i * i; j <= n; j += i {
+				notPrimes[j] = true
+			}
+		}
+	}
+	return notPrimes
 }
