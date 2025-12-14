@@ -8,14 +8,14 @@ type Grid struct {
 	grid [][]byte
 }
 
-type Pt struct {
-	R, C int
+type Point struct {
+	x, y int
 }
 
-func (p Pt) Add(o Pt) Pt { return Pt{p.R + o.R, p.C + o.C} }
+func (p Point) Add(o Point) Point { return Point{p.x + o.x, p.y + o.y} }
 
-var Dirs4 = []Pt{{-1, 0}, {0, 1}, {1, 0}, {0, -1}}
-var Dirs8 = []Pt{{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}}
+var Dirs4 = []Point{{-1, 0}, {0, 1}, {1, 0}, {0, -1}}
+var Dirs8 = []Point{{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}}
 
 func NewGrid(n, m int) *Grid {
 	grid := make([][]byte, n)
@@ -45,15 +45,48 @@ func NewGridPad(n, m int, char byte) *Grid {
 	return &Grid{n, m, grid}
 }
 
-func (g *Grid) Find(char byte) Pt {
+func (g *Grid) NewVis() [][]bool {
+	v := make([][]bool, len(g.grid))
+	for i := range v {
+		v[i] = make([]bool, len(g.grid[0]))
+	}
+	return v
+}
+
+func (g *Grid) Find(char byte) Point {
 	for r := 0; r < g.n; r++ {
 		for c := 0; c < g.m; c++ {
 			if g.grid[r][c] == char {
-				return Pt{r, c}
+				return Point{r, c}
 			}
 		}
 	}
-	return Pt{-1, -1}
+	return Point{-1, -1}
+}
+
+func (g *Grid) FindAll(char byte) []Point {
+	var res []Point
+	for x := 0; x < len(g.grid); x++ {
+		for y := 0; y < len(g.grid[0]); y++ {
+			if g.grid[x][y] == char {
+				res = append(res, Point{x, y})
+			}
+		}
+	}
+	return res
+}
+
+func (g *Grid) At(p Point) byte {
+	return g.grid[p.x][p.y]
+}
+
+// Returns a unique integer ID for a coordinate: (r * width) + c
+func (g *Grid) Id(r, c int) int {
+	return r*len(g.grid[0]) + c 
+}
+
+func (g *Grid) IdP(p Point) int {
+	return p.x*len(g.grid[0]) + p.y
 }
 
 func (g *Grid) Copy() *Grid {
