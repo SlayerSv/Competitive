@@ -1,72 +1,80 @@
 package segmenttree
 
 type seg struct {
-	tree []Node
-	n    int
+    tree []Node
+    // n is the number of leaves of a segtree
+    n    int
 }
 
 type Node struct {
-	val int
+    val int
 }
 
-func (seg *seg) update(v1, v2 Node) Node {
-	v1.val += v2.val
-	return v1
+func (seg *seg) combine(v1, v2 Node) Node {
+    node := makeNode(v1.val + v2.val)
+    return node
 }
 
 func makeNode(i int) Node {
-	return Node{
-		val: i,
-	}
+    return Node{
+        val: i,
+    }
+}
+
+func identity() Node {
+    return makeNode(0)
+}
+
+// Node and Query cover interval [l, r)
+func (seg *seg) Get(ql, qr int) Node {
+    return seg.get(ql, qr, 1, 0, seg.n)
 }
 
 func (seg *seg) get(ql, qr, si, l, r int) Node {
-	if l >= ql && r <= qr {
-		return seg.tree[si]
-	}
-	mid := (l + r) >> 1
-	if qr <= mid {
-		return seg.get(ql, qr, si*2+1, l, mid)
-	} else if ql >= mid {
-		return seg.get(ql, qr, si*2+2, mid, r)
-	} else {
-		return seg.update(seg.get(ql, qr, si*2+1, l, mid), seg.get(ql, qr, si*2+2, mid, r))
-	}
+    if qr <= l || r <= ql {
+         return identity()
+    }
+    if ql <= l && r <= qr {
+        return seg.tree[si]
+    }
+    mid := (l + r) >> 1
+    return seg.combine(
+        seg.get(ql, qr, si*2, l, mid),
+        seg.get(ql, qr, si*2+1, mid, r),
+    )
 }
 
-func (seg *seg) set(ql, qr, val, si, l, r int) {
-	if r-l == 1 {
-		node := makeNode(val)
-		seg.tree[si] = seg.update(seg.tree[si], node)
-		return
-	}
-	mid := (l + r) >> 1
-	if ql < mid {
-		seg.set(ql, qr, val, si*2+1, l, mid)
-	}
-	if qr > mid {
-		seg.set(ql, qr, val, si*2+2, mid, r)
-	}
-	seg.tree[si] = seg.update(seg.tree[si*2+1], seg.tree[si*2+2])
+// Node and Query cover interval [l, r)
+func (seg *seg) Set(ql, qr int, node Node) {
+    seg.set(ql, qr, 1, 0, seg.n, node)
 }
 
-func (seg *seg) Get(ql, qr int) Node {
-	return seg.get(ql, qr, 0, 0, seg.n)
-}
-
-func (seg *seg) Set(ql, qr int, val int) {
-	seg.set(ql, qr, val, 0, 0, seg.n)
+func (seg *seg) set(ql, qr, si, l, r int, node Node) {
+    if r-l == 1 {
+        seg.tree[si] = node
+        return
+    }
+    mid := (l + r) >> 1
+    if ql < mid {
+        seg.set(ql, qr, si*2, l, mid, node)
+    }
+    if qr > mid {
+        seg.set(ql, qr, si*2+1, mid, r, node)
+    }
+    seg.tree[si] = seg.combine(seg.tree[si*2], seg.tree[si*2+1])
 }
 
 func (seg *seg) build(arr []int) {
-	n := len(arr)
-	l := 1
-	for l < n {
-		l *= 2
-	}
-	seg.tree = make([]Node, l*2-1)
-	seg.n = l
-	for i := 0; i < n; i++ {
-		seg.Set(i, i+1, arr[i])
-	}
+    n := 1
+    for n < len(arr) {
+        n <<= 1
+    }
+    seg.n = n
+    seg.tree = make([]Node, 2*n)
+    for i := 0; i < len(arr); i++ {
+        seg.tree[n+i] = makeNode(arr[i])
+    }
+    for i := n - 1; i >= 1; i-- {
+        seg.tree[i] = seg.combine(seg.tree[i*2], seg.tree[i*2+1])
+    }
 }
